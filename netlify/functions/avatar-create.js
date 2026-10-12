@@ -55,9 +55,18 @@ export default async (request) => {
       return jsonResponse({ error: "URL gambar terlalu panjang." }, 400);
     }
 
-    if (image && !/^https:\/\/\S+$/i.test(image)) {
+    const validImage =
+      /^https:\/\/\S+$/i.test(image) ||
+      /^\/\.netlify\/functions\/avatar-image\?file=[a-f0-9-]+\.(png|jpg|webp)$/i.test(
+        image,
+      );
+
+    if (image && !validImage) {
       return jsonResponse(
-        { error: "Gambar harus menggunakan URL HTTPS." },
+        {
+          error:
+            "Gambar harus berupa URL HTTPS atau gambar yang diunggah ke DaveTier.",
+        },
         400,
       );
     }

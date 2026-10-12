@@ -40,9 +40,22 @@ export default async (request) => {
       );
     }
 
-    if (image.length > 2048 || (image && !/^https:\/\/\S+$/i.test(image))) {
+    if (image.length > 2048) {
+      return jsonResponse({ error: "URL gambar terlalu panjang." }, 400);
+    }
+
+    const validImage =
+      /^https:\/\/\S+$/i.test(image) ||
+      /^\/\.netlify\/functions\/avatar-image\?file=[a-f0-9-]+\.(png|jpg|webp)$/i.test(
+        image,
+      );
+
+    if (image && !validImage) {
       return jsonResponse(
-        { error: "URL gambar harus HTTPS dan maksimal 2048 karakter." },
+        {
+          error:
+            "Gambar harus berupa URL HTTPS atau gambar yang diunggah ke DaveTier.",
+        },
         400,
       );
     }
