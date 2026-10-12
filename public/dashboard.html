@@ -6,7 +6,6 @@
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#09090b" />
     <title>Dashboard — DaveTier</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
 
@@ -48,7 +47,8 @@
 
           <button
             id="logoutButton"
-            class="mt-4 w-full rounded-lg border border-zinc-800 px-3 py-2.5 text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
+            type="button"
+            class="mt-4 w-full rounded-lg border border-zinc-800 px-3 py-2.5 text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             Sign out
           </button>
@@ -66,7 +66,8 @@
 
           <button
             id="mobileLogoutButton"
-            class="rounded-lg border border-zinc-800 px-3 py-2 text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white md:hidden"
+            type="button"
+            class="rounded-lg border border-zinc-800 px-3 py-2 text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 md:hidden"
           >
             Sign out
           </button>
@@ -92,6 +93,7 @@
 
             <button
               id="addAvatarButton"
+              type="button"
               class="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
             >
               <svg
@@ -209,6 +211,7 @@
 
               <button
                 id="emptyAddButton"
+                type="button"
                 class="mt-5 rounded-lg border border-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
               >
                 Prepare first avatar
@@ -232,6 +235,7 @@
 
     <script>
       const notice = document.getElementById("notice");
+
       const logoutButtons = [
         document.getElementById("logoutButton"),
         document.getElementById("mobileLogoutButton"),
@@ -254,46 +258,44 @@
           }
         } catch {
           document.body.innerHTML = `
-          <main class="flex min-h-screen items-center justify-center bg-zinc-950 px-6 text-zinc-100">
-            <div class="max-w-sm text-center">
-              <h1 class="text-xl font-semibold">Unable to verify session</h1>
-              <p class="mt-3 text-sm text-zinc-400">Check your connection and sign in again.</p>
-              <a href="/admin.html" class="mt-5 inline-block rounded-lg bg-white px-4 py-3 text-sm font-semibold text-zinc-950">Back to login</a>
-            </div>
-          </main>
-        `;
+            <main class="flex min-h-screen items-center justify-center bg-zinc-950 px-6 text-zinc-100">
+              <div class="max-w-sm text-center">
+                <h1 class="text-xl font-semibold">Unable to verify session</h1>
+                <p class="mt-3 text-sm text-zinc-400">Check your connection and sign in again.</p>
+                <a href="/admin.html" class="mt-5 inline-block rounded-lg bg-white px-4 py-3 text-sm font-semibold text-zinc-950">Back to login</a>
+              </div>
+            </main>
+          `;
         }
       }
 
       async function logout() {
-        async function logout() {
-          notice.textContent = "Signing out...";
+        notice.textContent = "Signing out...";
 
-          logoutButtons.forEach((button) => {
-            button.disabled = true;
+        logoutButtons.forEach((button) => {
+          button.disabled = true;
+        });
+
+        try {
+          const response = await fetch("/.netlify/functions/admin-logout", {
+            method: "POST",
+            credentials: "same-origin",
+            cache: "no-store",
           });
 
-          try {
-            const response = await fetch("/.netlify/functions/admin-logout", {
-              method: "POST",
-              credentials: "same-origin",
-              cache: "no-store",
-            });
+          const result = await response.json();
 
-            const result = await response.json();
-
-            if (!response.ok || result.success !== true) {
-              throw new Error("Logout gagal");
-            }
-
-            window.location.replace("/admin.html");
-          } catch {
-            notice.textContent = "Logout gagal. Silakan coba lagi.";
-
-            logoutButtons.forEach((button) => {
-              button.disabled = false;
-            });
+          if (!response.ok || result.success !== true) {
+            throw new Error("Logout gagal");
           }
+
+          window.location.replace("/admin.html");
+        } catch {
+          notice.textContent = "Logout gagal. Silakan coba lagi.";
+
+          logoutButtons.forEach((button) => {
+            button.disabled = false;
+          });
         }
       }
 
@@ -309,6 +311,7 @@
       document
         .getElementById("addAvatarButton")
         .addEventListener("click", prepareAvatar);
+
       document
         .getElementById("emptyAddButton")
         .addEventListener("click", prepareAvatar);
