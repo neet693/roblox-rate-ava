@@ -3,10 +3,772 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Roblox Avatar Review</title>
+    <meta name="theme-color" content="#121212" />
+    <meta
+      name="description"
+      content="Explore Roblox avatar ratings, outfits, and tiers on DaveTier."
+    />
+    <title>DaveTier — Roblox Avatar Ratings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: #535353 #121212;
+      }
+
+      body {
+        background: #121212;
+      }
+
+      .green {
+        color: #1ed760;
+      }
+
+      .green-bg {
+        background: #1ed760;
+      }
+
+      .green-bg:hover {
+        background: #3be477;
+      }
+
+      .avatar-card {
+        background: #181818;
+        transition:
+          background 180ms ease,
+          transform 180ms ease;
+      }
+
+      .avatar-card:hover {
+        background: #282828;
+        transform: translateY(-3px);
+      }
+
+      .avatar-image {
+        background: radial-gradient(circle at 50% 35%, #303030, #181818 70%);
+      }
+
+      .tier-S {
+        color: #1ed760;
+        border-color: #1ed760;
+      }
+
+      .tier-A {
+        color: #60a5fa;
+        border-color: #60a5fa;
+      }
+
+      .tier-B {
+        color: #c084fc;
+        border-color: #c084fc;
+      }
+
+      .tier-C {
+        color: #facc15;
+        border-color: #facc15;
+      }
+
+      .tier-D {
+        color: #fb923c;
+        border-color: #fb923c;
+      }
+
+      .tier-F {
+        color: #f87171;
+        border-color: #f87171;
+      }
+
+      .tier-Unranked {
+        color: #a1a1aa;
+        border-color: #52525b;
+      }
+
+      .modal-backdrop {
+        background: rgb(0 0 0 / 78%);
+        backdrop-filter: blur(8px);
+      }
+
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 2px solid #1ed760;
+        outline-offset: 3px;
+      }
+    </style>
   </head>
-  <body>
-    <h1>Roblox Avatar Review</h1>
-    <p>Website berhasil disiapkan.</p>
+
+  <body class="min-h-screen text-white antialiased">
+    <header
+      class="sticky top-0 z-30 border-b border-white/10 bg-[#121212]/95 backdrop-blur-xl"
+    >
+      <div
+        class="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-5 py-4 md:px-10"
+      >
+        <a
+          href="/"
+          class="flex shrink-0 items-center gap-3"
+          aria-label="DaveTier home"
+        >
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full green-bg text-lg font-black text-black"
+          >
+            D
+          </div>
+          <div>
+            <span class="text-lg font-bold tracking-tight">DaveTier</span>
+            <p class="text-[11px] text-zinc-400">ROBLOX AVATAR RATINGS</p>
+          </div>
+        </a>
+
+        <nav class="flex items-center gap-3">
+          <a
+            href="#gallery"
+            class="hidden text-sm text-zinc-300 transition hover:text-white sm:block"
+            >Explore</a
+          >
+          <a
+            href="#gallery"
+            class="rounded-full green-bg px-4 py-2.5 text-sm font-bold text-black transition"
+            >Explore avatars</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="relative overflow-hidden border-b border-white/5">
+        <div
+          class="pointer-events-none absolute -right-24 -top-40 h-96 w-96 rounded-full bg-green-500/10 blur-[120px]"
+        ></div>
+        <div
+          class="pointer-events-none absolute -left-32 bottom-0 h-64 w-64 rounded-full bg-emerald-700/10 blur-[100px]"
+        ></div>
+
+        <div
+          class="relative mx-auto grid max-w-[1600px] gap-10 px-5 py-16 md:grid-cols-[1.2fr_0.8fr] md:items-center md:px-10 md:py-24"
+        >
+          <div>
+            <div
+              class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5"
+            >
+              <span class="h-2 w-2 rounded-full green-bg"></span>
+              <span class="text-xs font-medium text-zinc-300"
+                >THE AVATAR TIER LIST</span
+              >
+            </div>
+
+            <h1
+              class="max-w-3xl text-4xl font-black leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl"
+            >
+              Your avatar.<br />
+              Your <span class="green">style.</span><br />
+              Your tier.
+            </h1>
+
+            <p
+              class="mt-6 max-w-xl text-base leading-7 text-zinc-400 sm:text-lg"
+            >
+              Explore Roblox avatars, discover outfit ideas, and see how every
+              look ranks on DaveTier.
+            </p>
+
+            <a
+              href="#gallery"
+              class="mt-8 inline-flex items-center gap-2 rounded-full green-bg px-6 py-3.5 text-sm font-bold text-black transition"
+            >
+              Explore the collection
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <div class="hidden md:block">
+            <div
+              class="relative mx-auto max-w-sm rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-800/70 to-zinc-950 p-6 shadow-2xl"
+            >
+              <div class="flex items-center justify-between">
+                <span
+                  class="text-xs font-semibold tracking-widest text-zinc-400"
+                  >FEATURED COLLECTION</span
+                >
+                <span class="text-xs green">DAVE TIER</span>
+              </div>
+              <div class="my-8 flex items-center justify-center">
+                <div
+                  class="flex h-44 w-44 items-center justify-center rounded-full border border-green-400/20 bg-green-400/5"
+                >
+                  <svg
+                    viewBox="0 0 120 120"
+                    class="h-32 w-32"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="54"
+                      stroke="#1ed760"
+                      stroke-opacity=".22"
+                    />
+                    <path
+                      d="M60 18L70 43L97 44L76 61L83 87L60 72L37 87L44 61L23 44L50 43L60 18Z"
+                      fill="#1ed760"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex items-end justify-between gap-4">
+                <div>
+                  <p class="text-xl font-bold">Find your next look</p>
+                  <p class="mt-1 text-sm text-zinc-400">Style meets rating.</p>
+                </div>
+                <span
+                  class="rounded-lg border border-green-400 px-3 py-1 text-sm font-bold green"
+                  >S TIER</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="gallery"
+        class="mx-auto max-w-[1600px] px-5 py-12 md:px-10 md:py-16"
+      >
+        <div
+          class="flex flex-col justify-between gap-5 lg:flex-row lg:items-end"
+        >
+          <div>
+            <p class="text-xs font-bold tracking-[0.2em] green">
+              THE COLLECTION
+            </p>
+            <h2 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+              Explore avatars
+            </h2>
+            <p class="mt-3 text-sm text-zinc-400">
+              Find your favorite style in the collection.
+            </p>
+          </div>
+
+          <div class="grid gap-3 sm:grid-cols-2 lg:min-w-[520px]">
+            <label class="relative block">
+              <span class="sr-only">Search avatars</span>
+              <svg
+                class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="m20 20-4-4"></path>
+              </svg>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Search username..."
+                class="w-full rounded-xl border border-white/10 bg-[#242424] py-3 pl-11 pr-4 text-sm text-white outline-none transition placeholder:text-zinc-500 focus:border-zinc-500"
+              />
+            </label>
+
+            <div class="flex gap-3">
+              <label class="min-w-0 flex-1">
+                <span class="sr-only">Filter by tier</span>
+                <select
+                  id="tierFilter"
+                  class="w-full rounded-xl border border-white/10 bg-[#242424] px-3 py-3 text-sm text-zinc-200 outline-none"
+                >
+                  <option value="All">All tiers</option>
+                  <option value="S">S Tier</option>
+                  <option value="A">A Tier</option>
+                  <option value="B">B Tier</option>
+                  <option value="C">C Tier</option>
+                  <option value="D">D Tier</option>
+                  <option value="F">F Tier</option>
+                  <option value="Unranked">Unranked</option>
+                </select>
+              </label>
+
+              <label class="min-w-0 flex-1">
+                <span class="sr-only">Sort avatars</span>
+                <select
+                  id="sortFilter"
+                  class="w-full rounded-xl border border-white/10 bg-[#242424] px-3 py-3 text-sm text-zinc-200 outline-none"
+                >
+                  <option value="rating">Top rated</option>
+                  <option value="rating-low">Lowest rated</option>
+                  <option value="name">Username A–Z</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="mt-8 flex items-center justify-between border-b border-white/10 pb-4"
+        >
+          <p id="resultCount" class="text-sm text-zinc-400">
+            Loading collection...
+          </p>
+          <button
+            id="clearFilters"
+            type="button"
+            class="hidden text-xs font-semibold text-zinc-400 underline underline-offset-4 hover:text-white"
+          >
+            Clear filters
+          </button>
+        </div>
+
+        <div id="loadingState" class="py-24 text-center">
+          <div
+            class="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-zinc-700 border-t-green-400"
+          ></div>
+          <p class="mt-4 text-sm text-zinc-400">Loading avatars...</p>
+        </div>
+
+        <div id="errorState" class="hidden py-20 text-center">
+          <p class="text-lg font-semibold">Unable to load avatars</p>
+          <p id="errorMessage" class="mt-2 text-sm text-zinc-400">
+            Please try again.
+          </p>
+          <button
+            id="retryButton"
+            type="button"
+            class="mt-5 rounded-full green-bg px-5 py-2.5 text-sm font-bold text-black"
+          >
+            Try again
+          </button>
+        </div>
+
+        <div id="emptyState" class="hidden py-24 text-center">
+          <div
+            class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/5 text-2xl"
+          >
+            ⌕
+          </div>
+          <h3 class="mt-5 text-lg font-semibold">No avatars found</h3>
+          <p class="mt-2 text-sm text-zinc-400">
+            Try another username or tier filter.
+          </p>
+        </div>
+
+        <div
+          id="avatarGrid"
+          class="grid grid-cols-1 gap-5 pt-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        ></div>
+      </section>
+
+      <section class="border-y border-white/5 bg-[#181818]">
+        <div
+          class="mx-auto flex max-w-[1600px] flex-col gap-5 px-5 py-10 sm:flex-row sm:items-center sm:justify-between md:px-10"
+        >
+          <div>
+            <p class="text-xl font-bold">Every avatar has a story.</p>
+            <p class="mt-2 text-sm text-zinc-400">
+              Keep exploring. Find your style.
+            </p>
+          </div>
+          <a
+            href="#gallery"
+            class="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 px-5 py-3 text-sm font-semibold transition hover:border-white hover:bg-white/5"
+          >
+            Back to collection ↑
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      class="mx-auto flex max-w-[1600px] flex-col gap-3 px-5 py-8 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between md:px-10"
+    >
+      <p class="font-semibold tracking-wide text-zinc-300">DaveTier</p>
+      <p>Roblox avatar ratings · <span id="year"></span></p>
+    </footer>
+
+    <div
+      id="detailModal"
+      class="modal-backdrop fixed inset-0 z-50 hidden items-center justify-center overflow-y-auto p-4"
+    >
+      <div
+        class="my-auto w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-[#181818] shadow-2xl"
+      >
+        <div
+          class="flex items-center justify-between border-b border-white/10 px-5 py-4"
+        >
+          <p class="text-sm font-semibold">Avatar details</p>
+          <button
+            id="closeDetail"
+            type="button"
+            class="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-zinc-300 hover:bg-white/10"
+            aria-label="Close details"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="grid md:grid-cols-2">
+          <div
+            id="detailImageWrap"
+            class="avatar-image flex min-h-64 items-center justify-center p-5"
+          >
+            <span class="text-sm text-zinc-500">No image</span>
+          </div>
+
+          <div class="p-6">
+            <p class="text-xs font-bold tracking-widest green">AVATAR REVIEW</p>
+            <h2
+              id="detailUsername"
+              class="mt-3 break-words text-2xl font-bold"
+            ></h2>
+
+            <div class="mt-5 flex items-center gap-3">
+              <span
+                id="detailTier"
+                class="rounded-lg border px-3 py-1.5 text-sm font-bold"
+              ></span>
+              <span class="text-sm text-zinc-400">Tier ranking</span>
+            </div>
+
+            <div class="mt-6 rounded-xl bg-white/5 p-4">
+              <p class="text-xs text-zinc-400">Overall rating</p>
+              <p class="mt-2 text-3xl font-black">
+                <span id="detailRating"></span
+                ><span class="ml-1 text-base font-normal text-zinc-500"
+                  >/ 10</span
+                >
+              </p>
+              <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+                <div
+                  id="detailRatingBar"
+                  class="h-full rounded-full green-bg"
+                  style="width: 0%"
+                ></div>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <p class="text-xs font-bold tracking-widest text-zinc-400">
+                NOTES
+              </p>
+              <p
+                id="detailNotes"
+                class="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-zinc-300"
+              ></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+
+      let avatars = [];
+      let lastFocusedElement = null;
+
+      const allowedTiers = ["S", "A", "B", "C", "D", "F", "Unranked"];
+
+      $("year").textContent = new Date().getFullYear();
+
+      function validImage(image) {
+        return (
+          /^https:\/\/\S+$/i.test(image || "") ||
+          /^\/\.netlify\/functions\/avatar-image\?file=[a-f0-9-]+\.(png|jpg|webp)$/i.test(
+            image || "",
+          )
+        );
+      }
+
+      function createElement(tag, className, text) {
+        const element = document.createElement(tag);
+        element.className = className;
+        if (text !== undefined) element.textContent = text;
+        return element;
+      }
+
+      function tierClass(tier) {
+        return "tier-" + (allowedTiers.includes(tier) ? tier : "Unranked");
+      }
+
+      function makeTierBadge(tier) {
+        return createElement(
+          "span",
+          "inline-flex items-center rounded-md border bg-black/20 px-2.5 py-1 text-xs font-bold " +
+            tierClass(tier),
+          tier,
+        );
+      }
+
+      function makePlaceholder() {
+        const placeholder = createElement(
+          "div",
+          "flex h-full min-h-48 w-full items-center justify-center text-zinc-600",
+          "",
+        );
+
+        placeholder.innerHTML = `
+        <svg viewBox="0 0 80 80" class="h-16 w-16 opacity-30" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <circle cx="40" cy="27" r="13"></circle>
+          <path d="M15 68c2-15 11-23 25-23s23 8 25 23"></path>
+        </svg>
+      `;
+
+        return placeholder;
+      }
+
+      function makeAvatarImage(image, username) {
+        const wrap = createElement(
+          "div",
+          "avatar-image relative flex h-56 items-center justify-center overflow-hidden",
+        );
+
+        if (!image || !validImage(image)) {
+          wrap.append(makePlaceholder());
+          return wrap;
+        }
+
+        const img = document.createElement("img");
+        img.src = image;
+        img.alt = "Roblox avatar " + username;
+        img.loading = "lazy";
+        img.referrerPolicy = "no-referrer";
+        img.className =
+          "h-full w-full object-cover transition duration-300 group-hover:scale-105";
+
+        img.addEventListener(
+          "error",
+          () => {
+            img.remove();
+            wrap.append(makePlaceholder());
+          },
+          { once: true },
+        );
+
+        wrap.append(img);
+        return wrap;
+      }
+
+      function getFilteredAvatars() {
+        const query = $("searchInput").value.trim().toLowerCase();
+        const tier = $("tierFilter").value;
+        const sort = $("sortFilter").value;
+
+        const filtered = avatars.filter((avatar) => {
+          const matchesQuery = avatar.username.toLowerCase().includes(query);
+          const matchesTier = tier === "All" || avatar.tier === tier;
+          return matchesQuery && matchesTier;
+        });
+
+        filtered.sort((a, b) => {
+          if (sort === "name") return a.username.localeCompare(b.username);
+          if (sort === "rating-low") return a.rating - b.rating;
+          return b.rating - a.rating;
+        });
+
+        return filtered;
+      }
+
+      function renderAvatars() {
+        const filtered = getFilteredAvatars();
+        const grid = $("avatarGrid");
+
+        grid.replaceChildren();
+        $("resultCount").textContent =
+          filtered.length + (filtered.length === 1 ? " avatar" : " avatars");
+
+        $("emptyState").classList.toggle("hidden", filtered.length !== 0);
+        $("clearFilters").classList.toggle(
+          "hidden",
+          !$("searchInput").value && $("tierFilter").value === "All",
+        );
+
+        filtered.forEach((avatar) => {
+          const card = createElement(
+            "article",
+            "avatar-card group cursor-pointer overflow-hidden rounded-xl p-3",
+          );
+
+          card.tabIndex = 0;
+          card.setAttribute("role", "button");
+          card.setAttribute("aria-label", "View avatar " + avatar.username);
+
+          const image = makeAvatarImage(avatar.image, avatar.username);
+          image.classList.add("rounded-lg");
+
+          const content = createElement("div", "px-1 pb-1 pt-4");
+          const titleRow = createElement(
+            "div",
+            "flex items-start justify-between gap-3",
+          );
+
+          const titleGroup = createElement("div", "min-w-0");
+          titleGroup.append(
+            createElement(
+              "h3",
+              "truncate font-bold text-white",
+              avatar.username,
+            ),
+          );
+          titleGroup.append(
+            createElement("p", "mt-1 text-xs text-zinc-500", "Roblox avatar"),
+          );
+
+          const badge = makeTierBadge(avatar.tier);
+          titleRow.append(titleGroup, badge);
+
+          const ratingRow = createElement(
+            "div",
+            "mt-4 flex items-center justify-between border-t border-white/10 pt-3",
+          );
+          const ratingGroup = createElement("div", "flex items-center gap-2");
+          ratingGroup.append(
+            createElement("span", "green text-sm", "★"),
+            createElement(
+              "span",
+              "text-sm font-bold",
+              Number(avatar.rating).toFixed(1),
+            ),
+          );
+
+          ratingRow.append(
+            ratingGroup,
+            createElement("span", "text-xs text-zinc-500", "View details ↗"),
+          );
+
+          content.append(titleRow, ratingRow);
+          card.append(image, content);
+
+          card.addEventListener("click", () => openDetail(avatar));
+          card.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              openDetail(avatar);
+            }
+          });
+
+          grid.append(card);
+        });
+      }
+
+      function openDetail(avatar) {
+        lastFocusedElement = document.activeElement;
+
+        $("detailUsername").textContent = avatar.username;
+        $("detailTier").textContent = avatar.tier;
+        $("detailTier").className =
+          "rounded-lg border px-3 py-1.5 text-sm font-bold " +
+          tierClass(avatar.tier);
+
+        $("detailRating").textContent = Number(avatar.rating).toFixed(1);
+        $("detailRatingBar").style.width = Number(avatar.rating) * 10 + "%";
+        $("detailNotes").textContent = avatar.notes || "No notes available.";
+
+        const imageWrap = $("detailImageWrap");
+        imageWrap.replaceChildren();
+
+        const image = makeAvatarImage(avatar.image, avatar.username);
+        image.className =
+          "avatar-image flex min-h-64 w-full items-center justify-center overflow-hidden";
+        image.querySelector("img")?.classList.remove("group-hover:scale-105");
+        imageWrap.append(image);
+
+        $("detailModal").classList.remove("hidden");
+        $("detailModal").classList.add("flex");
+        $("closeDetail").focus();
+      }
+
+      function closeDetail() {
+        $("detailModal").classList.add("hidden");
+        $("detailModal").classList.remove("flex");
+        lastFocusedElement?.focus?.();
+      }
+
+      async function loadAvatars() {
+        $("loadingState").classList.remove("hidden");
+        $("errorState").classList.add("hidden");
+        $("emptyState").classList.add("hidden");
+        $("avatarGrid").replaceChildren();
+
+        try {
+          const response = await fetch(
+            "/.netlify/functions/avatar-public-list",
+            {
+              method: "GET",
+              headers: { Accept: "application/json" },
+              cache: "no-store",
+            },
+          );
+
+          const result = await response.json().catch(() => ({}));
+
+          if (
+            !response.ok ||
+            result.success !== true ||
+            !Array.isArray(result.data)
+          ) {
+            throw new Error(
+              result.error || "Failed to load the avatar collection.",
+            );
+          }
+
+          avatars = result.data.map((item) => ({
+            id: String(item.id || ""),
+            username: String(item.username || "Unknown"),
+            image: validImage(item.image) ? item.image : "",
+            tier: allowedTiers.includes(item.tier) ? item.tier : "Unranked",
+            rating:
+              Number.isFinite(Number(item.rating)) &&
+              Number(item.rating) >= 0 &&
+              Number(item.rating) <= 10
+                ? Number(item.rating)
+                : 0,
+            notes: String(item.notes || "").slice(0, 1000),
+          }));
+
+          $("loadingState").classList.add("hidden");
+          renderAvatars();
+        } catch (error) {
+          $("loadingState").classList.add("hidden");
+          $("errorState").classList.remove("hidden");
+          $("errorMessage").textContent =
+            error.message || "Something went wrong.";
+          $("resultCount").textContent = "Collection unavailable";
+        }
+      }
+
+      $("searchInput").addEventListener("input", renderAvatars);
+      $("tierFilter").addEventListener("change", renderAvatars);
+      $("sortFilter").addEventListener("change", renderAvatars);
+      $("retryButton").addEventListener("click", loadAvatars);
+
+      $("clearFilters").addEventListener("click", () => {
+        $("searchInput").value = "";
+        $("tierFilter").value = "All";
+        $("sortFilter").value = "rating";
+        renderAvatars();
+      });
+
+      $("closeDetail").addEventListener("click", closeDetail);
+
+      $("detailModal").addEventListener("click", (event) => {
+        if (event.target === $("detailModal")) closeDetail();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (
+          event.key === "Escape" &&
+          !$("detailModal").classList.contains("hidden")
+        ) {
+          closeDetail();
+        }
+      });
+
+      loadAvatars();
+    </script>
   </body>
 </html>
