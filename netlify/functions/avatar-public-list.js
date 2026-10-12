@@ -5,7 +5,7 @@ const jsonResponse = (data, status = 200) =>
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store",
+      "Cache-Control": "public, max-age=30, stale-while-revalidate=60",
       "X-Content-Type-Options": "nosniff",
     },
   });
@@ -24,14 +24,12 @@ export default async (request) => {
   try {
     console.log("avatar-public-list: mulai membaca data");
 
-    const avatars = await readAvatars();
-
-    console.log(
-      "avatar-public-list: hasil readAvatars",
-      Array.isArray(avatars) ? `jumlah=${avatars.length}` : "bukan array",
-    );
+    const result = await readAvatars();
+    const avatars = result.avatars;
 
     if (!Array.isArray(avatars)) {
+      console.error("avatar-public-list: data avatar bukan array");
+
       throw new Error("Invalid avatar data");
     }
 
@@ -51,12 +49,14 @@ export default async (request) => {
       notes: String(avatar.notes || "").slice(0, 1000),
     }));
 
-    return jsonResponse({ success: true, data });
+    console.log(`avatar-public-list: berhasil memuat ${data.length} avatar`);
+
+    return jsonResponse({
+      success: true,
+      data,
+    });
   } catch (error) {
-    console.error(
-      "avatar-public-list error:",
-      error?.message || "Unknown error",
-    );
+    console.error("avatar-public-list error:", error.message);
 
     return jsonResponse({ success: false, error: "Gagal memuat avatar." }, 500);
   }
