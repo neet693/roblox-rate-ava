@@ -266,7 +266,35 @@
       }
 
       async function logout() {
-        notice.textContent = "Logout endpoint belum dibuat.";
+        async function logout() {
+          notice.textContent = "Signing out...";
+
+          logoutButtons.forEach((button) => {
+            button.disabled = true;
+          });
+
+          try {
+            const response = await fetch("/.netlify/functions/admin-logout", {
+              method: "POST",
+              credentials: "same-origin",
+              cache: "no-store",
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || result.success !== true) {
+              throw new Error("Logout gagal");
+            }
+
+            window.location.replace("/admin.html");
+          } catch {
+            notice.textContent = "Logout gagal. Silakan coba lagi.";
+
+            logoutButtons.forEach((button) => {
+              button.disabled = false;
+            });
+          }
+        }
       }
 
       logoutButtons.forEach((button) => {
