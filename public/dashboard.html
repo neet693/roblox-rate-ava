@@ -60,7 +60,6 @@
             <p class="text-xs text-zinc-500">Workspace / Overview</p>
             <h1 class="mt-1 text-xl font-semibold tracking-tight">Dashboard</h1>
           </div>
-
           <button
             id="mobileLogoutButton"
             type="button"
@@ -68,7 +67,6 @@
           >
             Sign out
           </button>
-
           <div class="hidden items-center gap-2 sm:flex">
             <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
             <span class="text-xs text-zinc-400">Admin session</span>
@@ -89,6 +87,7 @@
             </div>
             <button
               id="addAvatarButton"
+              type="button"
               class="rounded-xl bg-white px-4 py-3 text-sm font-semibold text-zinc-950 hover:bg-zinc-200"
             >
               + Add avatar
@@ -146,7 +145,6 @@
                   Manage your avatar review collection.
                 </p>
               </div>
-
               <input
                 id="searchInput"
                 type="search"
@@ -174,6 +172,7 @@
               </p>
               <button
                 id="emptyAddButton"
+                type="button"
                 class="mt-5 rounded-lg border border-zinc-800 px-4 py-2.5 text-sm hover:bg-zinc-900"
               >
                 Add your first avatar
@@ -237,19 +236,74 @@
           </div>
 
           <div>
+            <label class="mb-2 block text-sm text-zinc-300"
+              >Avatar screenshot</label
+            >
+
+            <div class="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
+              <div
+                id="imagePreviewWrap"
+                class="mb-4 hidden overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950"
+              >
+                <img
+                  id="imagePreview"
+                  src=""
+                  alt="Avatar screenshot preview"
+                  class="mx-auto max-h-64 w-full object-contain"
+                />
+              </div>
+
+              <label
+                for="imageFile"
+                class="flex cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-zinc-700 px-4 py-6 text-center transition hover:border-zinc-500 hover:bg-zinc-800/50"
+              >
+                <span class="text-sm font-medium text-zinc-200"
+                  >Choose screenshot</span
+                >
+                <span class="mt-1 text-xs text-zinc-500"
+                  >PNG, JPG, WebP · Maksimal 2 MB</span
+                >
+                <input
+                  id="imageFile"
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  class="sr-only"
+                />
+              </label>
+
+              <p id="imageFileName" class="mt-2 text-xs text-zinc-500">
+                Belum ada file dipilih.
+              </p>
+              <button
+                id="removeImageButton"
+                type="button"
+                class="mt-2 hidden text-xs text-red-400 hover:text-red-300"
+              >
+                Hapus pilihan gambar
+              </button>
+            </div>
+
+            <div class="my-4 flex items-center gap-3">
+              <div class="h-px flex-1 bg-zinc-800"></div>
+              <span class="text-xs text-zinc-500">ATAU</span>
+              <div class="h-px flex-1 bg-zinc-800"></div>
+            </div>
+
             <label for="image" class="mb-2 block text-sm text-zinc-300"
-              >Avatar image URL</label
+              >Gunakan URL gambar</label
             >
             <input
               id="image"
               name="image"
-              type="url"
+              type="text"
               maxlength="2048"
+              autocomplete="url"
               class="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-3 text-sm outline-none focus:border-zinc-600"
               placeholder="https://..."
             />
             <p class="mt-1 text-xs text-zinc-500">
-              Gunakan URL gambar HTTPS yang bisa diakses publik.
+              Pilih file di atas atau masukkan URL HTTPS. Jika memilih file,
+              screenshot tersebut akan digunakan.
             </p>
           </div>
 
@@ -341,8 +395,111 @@
 
       let avatars = [];
       let busy = false;
+      let selectedImageFile = null;
+      let previewObjectUrl = null;
+
+      const imageFile = $("imageFile");
+      const imagePreview = $("imagePreview");
+      const imagePreviewWrap = $("imagePreviewWrap");
+      const imageFileName = $("imageFileName");
+      const removeImageButton = $("removeImageButton");
 
       $("year").textContent = new Date().getFullYear();
+
+      function showNotice(message, type = "normal") {
+        notice.textContent = message;
+        notice.className =
+          "text-sm " +
+          (type === "error"
+            ? "text-red-400"
+            : type === "success"
+              ? "text-emerald-400"
+              : "text-zinc-400");
+      }
+
+      function showFormError(message) {
+        $("formError").textContent = message;
+        $("formError").classList.remove("hidden");
+      }
+
+      function clearFormError() {
+        $("formError").textContent = "";
+        $("formError").classList.add("hidden");
+      }
+
+      function clearSelectedImage() {
+        selectedImageFile = null;
+        imageFile.value = "";
+
+        if (previewObjectUrl) {
+          URL.revokeObjectURL(previewObjectUrl);
+          previewObjectUrl = null;
+        }
+
+        imagePreview.removeAttribute("src");
+        imagePreviewWrap.classList.add("hidden");
+        removeImageButton.classList.add("hidden");
+        imageFileName.textContent = "Belum ada file dipilih.";
+      }
+
+      function setPreviewFromUrl(url) {
+        if (!url) {
+          imagePreview.removeAttribute("src");
+          imagePreviewWrap.classList.add("hidden");
+          return;
+        }
+
+        imagePreview.src = url;
+        imagePreviewWrap.classList.remove("hidden");
+      }
+
+      imageFile.addEventListener("change", () => {
+        clearFormError();
+        const file = imageFile.files?.[0];
+
+        if (!file) return;
+
+        const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
+
+        if (!allowedTypes.includes(file.type)) {
+          clearSelectedImage();
+          showFormError("Format harus PNG, JPG, atau WebP.");
+          return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+          clearSelectedImage();
+          showFormError("Ukuran gambar maksimal 2 MB.");
+          return;
+        }
+
+        selectedImageFile = file;
+
+        if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+
+        previewObjectUrl = URL.createObjectURL(file);
+        imagePreview.src = previewObjectUrl;
+        imagePreviewWrap.classList.remove("hidden");
+        removeImageButton.classList.remove("hidden");
+        imageFileName.textContent = file.name;
+        $("image").value = "";
+      });
+
+      removeImageButton.addEventListener("click", () => {
+        clearSelectedImage();
+        clearFormError();
+      });
+
+      $("image").addEventListener("input", () => {
+        if (selectedImageFile) clearSelectedImage();
+        const url = $("image").value.trim();
+
+        if (/^https:\/\/\S+$/i.test(url)) {
+          setPreviewFromUrl(url);
+        } else if (!url) {
+          setPreviewFromUrl("");
+        }
+      });
 
       async function verifySession() {
         try {
@@ -356,17 +513,16 @@
             window.location.replace("/admin.html");
             return false;
           }
-
           return true;
         } catch {
           document.body.innerHTML = `
-          <main class="flex min-h-screen items-center justify-center bg-zinc-950 px-6 text-zinc-100">
-            <div class="max-w-sm text-center">
-              <h1 class="text-xl font-semibold">Unable to verify session</h1>
-              <p class="mt-3 text-sm text-zinc-400">Check your connection and sign in again.</p>
-              <a href="/admin.html" class="mt-5 inline-block rounded-lg bg-white px-4 py-3 text-sm font-semibold text-zinc-950">Back to login</a>
-            </div>
-          </main>`;
+            <main class="flex min-h-screen items-center justify-center bg-zinc-950 px-6 text-zinc-100">
+              <div class="max-w-sm text-center">
+                <h1 class="text-xl font-semibold">Unable to verify session</h1>
+                <p class="mt-3 text-sm text-zinc-400">Check your connection and sign in again.</p>
+                <a href="/admin.html" class="mt-5 inline-block rounded-lg bg-white px-4 py-3 text-sm font-semibold text-zinc-950">Back to login</a>
+              </div>
+            </main>`;
           return false;
         }
       }
@@ -375,7 +531,7 @@
         if (busy) return;
 
         logoutButtons.forEach((button) => (button.disabled = true));
-        notice.textContent = "Signing out...";
+        showNotice("Signing out...");
 
         try {
           const response = await fetch("/.netlify/functions/admin-logout", {
@@ -385,13 +541,12 @@
           });
           const result = await response.json();
 
-          if (!response.ok || result.success !== true) {
+          if (!response.ok || result.success !== true)
             throw new Error("Logout failed");
-          }
 
           window.location.replace("/admin.html");
         } catch {
-          notice.textContent = "Logout gagal. Silakan coba lagi.";
+          showNotice("Logout gagal. Silakan coba lagi.", "error");
           logoutButtons.forEach((button) => (button.disabled = false));
         }
       }
@@ -399,17 +554,6 @@
       logoutButtons.forEach((button) =>
         button.addEventListener("click", logout),
       );
-
-      function showNotice(message, type = "normal") {
-        notice.textContent = message;
-        notice.className =
-          "text-sm " +
-          (type === "error"
-            ? "text-red-400"
-            : type === "success"
-              ? "text-emerald-400"
-              : "text-zinc-400");
-      }
 
       async function api(path, options = {}) {
         const response = await fetch("/.netlify/functions/" + path, {
@@ -441,6 +585,15 @@
         element.className = className;
         if (text !== undefined) element.textContent = text;
         return element;
+      }
+
+      function validAvatarImage(image) {
+        return (
+          /^https:\/\/\S+$/i.test(image || "") ||
+          /^\/\.netlify\/functions\/avatar-image\?file=[a-f0-9-]+\.(png|jpg|webp)$/i.test(
+            image || "",
+          )
+        );
       }
 
       function renderAvatars() {
@@ -480,13 +633,14 @@
             "flex h-48 items-center justify-center overflow-hidden bg-zinc-900",
           );
 
-          if (avatar.image && /^https:\/\/\S+$/i.test(avatar.image)) {
+          if (avatar.image && validAvatarImage(avatar.image)) {
             const img = document.createElement("img");
             img.src = avatar.image;
             img.alt = "Avatar " + avatar.username;
             img.loading = "lazy";
             img.referrerPolicy = "no-referrer";
             img.className = "h-full w-full object-cover";
+
             img.addEventListener(
               "error",
               () => {
@@ -501,6 +655,7 @@
               },
               { once: true },
             );
+
             imageWrap.append(img);
           } else {
             imageWrap.append(
@@ -514,6 +669,7 @@
             "flex items-start justify-between gap-3",
           );
           const titleGroup = makeElement("div", "min-w-0");
+
           titleGroup.append(
             makeElement("h4", "truncate font-semibold", avatar.username),
           );
@@ -577,9 +733,9 @@
 
         try {
           const result = await api("avatar-list");
-          if (!Array.isArray(result.data)) {
+
+          if (!Array.isArray(result.data))
             throw new Error("Format data avatar tidak valid.");
-          }
 
           avatars = result.data;
           $("storageStatus").textContent = "Connected";
@@ -596,15 +752,23 @@
 
       function openModal(avatar = null) {
         form.reset();
-        $("formError").classList.add("hidden");
+        clearSelectedImage();
+        clearFormError();
+
         $("avatarId").value = avatar?.id || "";
         $("username").value = avatar?.username || "";
         $("image").value = avatar?.image || "";
         $("tier").value = avatar?.tier || "Unranked";
         $("rating").value = avatar?.rating ?? 0;
         $("notes").value = avatar?.notes || "";
+
+        if (avatar?.image) {
+          setPreviewFromUrl(avatar.image);
+          imageFileName.textContent = "Gambar tersimpan saat ini.";
+        }
+
         $("modalTitle").textContent = avatar ? "Edit avatar" : "Add avatar";
-        $("saveButton").textContent = avatar ? "Save changes" : "Save avatar";
+        saveButton.textContent = avatar ? "Save changes" : "Save avatar";
 
         modal.classList.remove("hidden");
         modal.classList.add("flex");
@@ -614,6 +778,7 @@
       function closeModal() {
         modal.classList.add("hidden");
         modal.classList.remove("flex");
+        clearSelectedImage();
       }
 
       $("addAvatarButton").addEventListener("click", () => openModal());
@@ -630,9 +795,44 @@
         if (event.key === "Escape") closeModal();
       });
 
+      function fileToDataUrl(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () =>
+            reject(new Error("Gagal membaca file gambar."));
+          reader.readAsDataURL(file);
+        });
+      }
+
+      async function uploadSelectedImage() {
+        if (!selectedImageFile) return null;
+
+        const file = selectedImageFile;
+        const dataUrl = await fileToDataUrl(file);
+
+        const result = await api("avatar-upload", {
+          method: "POST",
+          body: JSON.stringify({
+            image: dataUrl,
+            mimeType: file.type,
+          }),
+        });
+
+        if (!result.image || !validAvatarImage(result.image)) {
+          throw new Error(
+            "Backend mengembalikan path gambar yang tidak valid.",
+          );
+        }
+
+        return result.image;
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         if (busy) return;
+
+        clearFormError();
 
         const id = $("avatarId").value;
         const payload = {
@@ -644,15 +844,14 @@
         };
 
         if (!payload.username || payload.username.length > 40) {
-          $("formError").textContent =
-            "Username wajib diisi, maksimal 40 karakter.";
-          $("formError").classList.remove("hidden");
+          showFormError("Username wajib diisi, maksimal 40 karakter.");
           return;
         }
 
-        if (payload.image && !/^https:\/\/\S+$/i.test(payload.image)) {
-          $("formError").textContent = "URL gambar harus menggunakan HTTPS.";
-          $("formError").classList.remove("hidden");
+        if (payload.image && !validAvatarImage(payload.image)) {
+          showFormError(
+            "Masukkan URL HTTPS yang valid atau gunakan file screenshot.",
+          );
           return;
         }
 
@@ -661,22 +860,38 @@
           payload.rating < 0 ||
           payload.rating > 10
         ) {
-          $("formError").textContent = "Rating harus antara 0 dan 10.";
-          $("formError").classList.remove("hidden");
+          showFormError("Rating harus antara 0 dan 10.");
           return;
         }
 
         if (payload.notes.length > 1000) {
-          $("formError").textContent = "Notes maksimal 1000 karakter.";
-          $("formError").classList.remove("hidden");
+          showFormError("Notes maksimal 1000 karakter.");
+          return;
+        }
+
+        if (selectedImageFile && selectedImageFile.size > 2 * 1024 * 1024) {
+          showFormError("Ukuran gambar maksimal 2 MB.");
           return;
         }
 
         busy = true;
         saveButton.disabled = true;
-        saveButton.textContent = "Saving...";
 
         try {
+          if (selectedImageFile) {
+            saveButton.textContent = "Uploading image...";
+            showNotice("Mengunggah screenshot...");
+
+            const uploadedPath = await uploadSelectedImage();
+            if (!uploadedPath)
+              throw new Error("Gagal mendapatkan path gambar.");
+
+            payload.image = uploadedPath;
+          }
+
+          saveButton.textContent = "Saving...";
+          showNotice("Menyimpan avatar...");
+
           const result = await api(id ? "avatar-update" : "avatar-create", {
             method: id ? "PUT" : "POST",
             body: JSON.stringify(id ? { ...payload, id } : payload),
@@ -686,12 +901,14 @@
           showNotice(result.message || "Avatar berhasil disimpan.", "success");
           await loadAvatars();
         } catch (error) {
-          $("formError").textContent = error.message;
-          $("formError").classList.remove("hidden");
+          showFormError(error.message || "Gagal menyimpan avatar.");
+          showNotice(error.message || "Gagal menyimpan avatar.", "error");
         } finally {
           busy = false;
           saveButton.disabled = false;
-          saveButton.textContent = id ? "Save changes" : "Save avatar";
+          saveButton.textContent = $("avatarId").value
+            ? "Save changes"
+            : "Save avatar";
         }
       });
 
@@ -701,7 +918,6 @@
         const confirmed = window.confirm(
           `Hapus avatar "${avatar.username}"? Perubahan ini akan disimpan ke GitHub.`,
         );
-
         if (!confirmed) return;
 
         busy = true;
@@ -723,9 +939,7 @@
       }
 
       async function init() {
-        if (await verifySession()) {
-          await loadAvatars();
-        }
+        if (await verifySession()) await loadAvatars();
       }
 
       init();
