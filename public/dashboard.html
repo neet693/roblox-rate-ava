@@ -30,25 +30,22 @@
           <a
             href="#overview"
             class="shrink-0 rounded-lg bg-zinc-800 px-3 py-2.5 text-sm font-medium text-white"
+            >Overview</a
           >
-            Overview
-          </a>
           <a
             href="#avatars"
             class="shrink-0 rounded-lg px-3 py-2.5 text-sm text-zinc-400 transition hover:bg-zinc-900 hover:text-white"
+            >Avatar library</a
           >
-            Avatar library
-          </a>
         </nav>
 
         <div class="mt-auto hidden border-t border-zinc-800 pt-5 md:block">
           <p class="text-xs text-zinc-500">Signed in as</p>
           <p class="mt-1 text-sm font-medium">Administrator</p>
-
           <button
             id="logoutButton"
             type="button"
-            class="mt-4 w-full rounded-lg border border-zinc-800 px-3 py-2.5 text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+            class="mt-4 w-full rounded-lg border border-zinc-800 px-3 py-2.5 text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white disabled:opacity-50"
           >
             Sign out
           </button>
@@ -67,7 +64,7 @@
           <button
             id="mobileLogoutButton"
             type="button"
-            class="rounded-lg border border-zinc-800 px-3 py-2 text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 md:hidden"
+            class="rounded-lg border border-zinc-800 px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-900 md:hidden"
           >
             Sign out
           </button>
@@ -90,23 +87,11 @@
                 Manage your Roblox avatar ratings in one place.
               </p>
             </div>
-
             <button
               id="addAvatarButton"
-              type="button"
-              class="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
+              class="rounded-xl bg-white px-4 py-3 text-sm font-semibold text-zinc-950 hover:bg-zinc-200"
             >
-              <svg
-                class="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                aria-hidden="true"
-              >
-                <path d="M12 5v14M5 12h14" stroke-linecap="round" />
-              </svg>
-              Add avatar
+              + Add avatar
             </button>
           </section>
 
@@ -115,19 +100,17 @@
               class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5"
             >
               <p class="text-sm text-zinc-400">Total avatars</p>
-              <p class="mt-4 text-3xl font-semibold tracking-tight">—</p>
-              <p class="mt-2 text-xs text-zinc-500">
-                Data source not connected
-              </p>
+              <p id="totalAvatars" class="mt-4 text-3xl font-semibold">—</p>
+              <p class="mt-2 text-xs text-zinc-500">Saved in GitHub</p>
             </article>
 
             <article
               class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5"
             >
               <p class="text-sm text-zinc-400">Tier categories</p>
-              <p class="mt-4 text-3xl font-semibold tracking-tight">—</p>
+              <p id="totalTiers" class="mt-4 text-3xl font-semibold">—</p>
               <p class="mt-2 text-xs text-zinc-500">
-                Will be calculated from avatar data
+                Unique tiers in your library
               </p>
             </article>
 
@@ -136,11 +119,16 @@
             >
               <p class="text-sm text-zinc-400">Storage status</p>
               <div class="mt-4 flex items-center gap-2">
-                <span class="h-2 w-2 rounded-full bg-amber-400"></span>
-                <p class="text-lg font-semibold">Not connected</p>
+                <span
+                  id="storageDot"
+                  class="h-2 w-2 rounded-full bg-amber-400"
+                ></span>
+                <p id="storageStatus" class="text-lg font-semibold">
+                  Connecting...
+                </p>
               </div>
               <p class="mt-2 text-xs text-zinc-500">
-                GitHub storage integration pending
+                GitHub repository storage
               </p>
             </article>
           </section>
@@ -159,64 +147,43 @@
                 </p>
               </div>
 
-              <div class="relative">
-                <svg
-                  class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  aria-hidden="true"
-                >
-                  <circle cx="11" cy="11" r="7" />
-                  <path d="m16 16 4 4" stroke-linecap="round" />
-                </svg>
-
-                <input
-                  id="searchInput"
-                  type="search"
-                  placeholder="Search avatars..."
-                  class="w-full rounded-lg border border-zinc-800 bg-zinc-950 py-2.5 pl-9 pr-3 text-sm outline-none placeholder:text-zinc-600 focus:border-zinc-600 sm:w-64"
-                />
-              </div>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Search avatars..."
+                class="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2.5 text-sm outline-none placeholder:text-zinc-600 focus:border-zinc-600 sm:w-64"
+              />
             </div>
 
             <div
-              class="flex min-h-64 flex-col items-center justify-center px-6 py-14 text-center"
+              id="loadingState"
+              class="px-6 py-14 text-center text-sm text-zinc-500"
             >
+              Loading avatar library...
+            </div>
+
+            <div id="emptyState" class="hidden px-6 py-14 text-center">
               <div
-                class="flex h-12 w-12 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900"
+                class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 text-xl"
               >
-                <svg
-                  class="h-5 w-5 text-zinc-400"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  aria-hidden="true"
-                >
-                  <rect x="3" y="3" width="18" height="18" rx="3" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <path d="m21 15-5-5L5 21" />
-                </svg>
+                ＋
               </div>
-
-              <h4 class="mt-4 text-sm font-semibold">
-                Your library is not connected yet
-              </h4>
-              <p class="mt-2 max-w-sm text-sm leading-6 text-zinc-500">
-                Once the storage API is ready, your avatar images, names, and
-                tier ratings will appear here.
+              <h4 class="mt-4 text-sm font-semibold">No avatars found</h4>
+              <p id="emptyMessage" class="mt-2 text-sm text-zinc-500">
+                Start building your collection.
               </p>
-
               <button
                 id="emptyAddButton"
-                type="button"
-                class="mt-5 rounded-lg border border-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
+                class="mt-5 rounded-lg border border-zinc-800 px-4 py-2.5 text-sm hover:bg-zinc-900"
               >
-                Prepare first avatar
+                Add your first avatar
               </button>
             </div>
+
+            <div
+              id="avatarGrid"
+              class="hidden grid gap-4 p-5 sm:grid-cols-2 xl:grid-cols-3"
+            ></div>
           </section>
 
           <p
@@ -233,48 +200,182 @@
       </main>
     </div>
 
+    <div
+      id="avatarModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center overflow-y-auto bg-black/80 p-4"
+    >
+      <div
+        class="my-auto w-full max-w-lg rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl"
+      >
+        <div class="flex items-center justify-between">
+          <h2 id="modalTitle" class="text-lg font-semibold">Add avatar</h2>
+          <button
+            id="closeModalButton"
+            type="button"
+            class="rounded-lg px-3 py-2 text-zinc-400 hover:bg-zinc-900 hover:text-white"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        </div>
+
+        <form id="avatarForm" class="mt-6 space-y-4">
+          <input id="avatarId" type="hidden" />
+
+          <div>
+            <label for="username" class="mb-2 block text-sm text-zinc-300"
+              >Roblox username *</label
+            >
+            <input
+              id="username"
+              name="username"
+              required
+              maxlength="40"
+              class="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-3 text-sm outline-none focus:border-zinc-600"
+              placeholder="RobloxPlayer"
+            />
+          </div>
+
+          <div>
+            <label for="image" class="mb-2 block text-sm text-zinc-300"
+              >Avatar image URL</label
+            >
+            <input
+              id="image"
+              name="image"
+              type="url"
+              maxlength="2048"
+              class="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-3 text-sm outline-none focus:border-zinc-600"
+              placeholder="https://..."
+            />
+            <p class="mt-1 text-xs text-zinc-500">
+              Gunakan URL gambar HTTPS yang bisa diakses publik.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="tier" class="mb-2 block text-sm text-zinc-300"
+                >Tier *</label
+              >
+              <select
+                id="tier"
+                name="tier"
+                required
+                class="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-3 text-sm outline-none focus:border-zinc-600"
+              >
+                <option value="S">S</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="F">F</option>
+                <option value="Unranked">Unranked</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="rating" class="mb-2 block text-sm text-zinc-300"
+                >Rating (0–10) *</label
+              >
+              <input
+                id="rating"
+                name="rating"
+                type="number"
+                min="0"
+                max="10"
+                step="0.1"
+                required
+                value="0"
+                class="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-3 text-sm outline-none focus:border-zinc-600"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="notes" class="mb-2 block text-sm text-zinc-300"
+              >Notes</label
+            >
+            <textarea
+              id="notes"
+              name="notes"
+              maxlength="1000"
+              rows="3"
+              class="w-full resize-y rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-3 text-sm outline-none focus:border-zinc-600"
+              placeholder="Outfit, accessories, color matching..."
+            ></textarea>
+          </div>
+
+          <p id="formError" class="hidden text-sm text-red-400"></p>
+
+          <div class="flex gap-3 pt-2">
+            <button
+              id="cancelButton"
+              type="button"
+              class="flex-1 rounded-lg border border-zinc-800 px-4 py-3 text-sm text-zinc-300 hover:bg-zinc-900"
+            >
+              Cancel
+            </button>
+            <button
+              id="saveButton"
+              type="submit"
+              class="flex-1 rounded-lg bg-white px-4 py-3 text-sm font-semibold text-zinc-950 hover:bg-zinc-200"
+            >
+              Save avatar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script>
-      const notice = document.getElementById("notice");
+      const $ = (id) => document.getElementById(id);
 
-      const logoutButtons = [
-        document.getElementById("logoutButton"),
-        document.getElementById("mobileLogoutButton"),
-      ].filter(Boolean);
+      const notice = $("notice");
+      const modal = $("avatarModal");
+      const form = $("avatarForm");
+      const saveButton = $("saveButton");
+      const logoutButtons = [$("logoutButton"), $("mobileLogoutButton")].filter(
+        Boolean,
+      );
 
-      document.getElementById("year").textContent = new Date().getFullYear();
+      let avatars = [];
+      let busy = false;
+
+      $("year").textContent = new Date().getFullYear();
 
       async function verifySession() {
         try {
           const response = await fetch("/.netlify/functions/admin-session", {
-            method: "GET",
             credentials: "same-origin",
             cache: "no-store",
           });
-
           const result = await response.json();
 
           if (!response.ok || result.authenticated !== true) {
             window.location.replace("/admin.html");
+            return false;
           }
+
+          return true;
         } catch {
           document.body.innerHTML = `
-            <main class="flex min-h-screen items-center justify-center bg-zinc-950 px-6 text-zinc-100">
-              <div class="max-w-sm text-center">
-                <h1 class="text-xl font-semibold">Unable to verify session</h1>
-                <p class="mt-3 text-sm text-zinc-400">Check your connection and sign in again.</p>
-                <a href="/admin.html" class="mt-5 inline-block rounded-lg bg-white px-4 py-3 text-sm font-semibold text-zinc-950">Back to login</a>
-              </div>
-            </main>
-          `;
+          <main class="flex min-h-screen items-center justify-center bg-zinc-950 px-6 text-zinc-100">
+            <div class="max-w-sm text-center">
+              <h1 class="text-xl font-semibold">Unable to verify session</h1>
+              <p class="mt-3 text-sm text-zinc-400">Check your connection and sign in again.</p>
+              <a href="/admin.html" class="mt-5 inline-block rounded-lg bg-white px-4 py-3 text-sm font-semibold text-zinc-950">Back to login</a>
+            </div>
+          </main>`;
+          return false;
         }
       }
 
       async function logout() {
-        notice.textContent = "Signing out...";
+        if (busy) return;
 
-        logoutButtons.forEach((button) => {
-          button.disabled = true;
-        });
+        logoutButtons.forEach((button) => (button.disabled = true));
+        notice.textContent = "Signing out...";
 
         try {
           const response = await fetch("/.netlify/functions/admin-logout", {
@@ -282,52 +383,352 @@
             credentials: "same-origin",
             cache: "no-store",
           });
-
           const result = await response.json();
 
           if (!response.ok || result.success !== true) {
-            throw new Error("Logout gagal");
+            throw new Error("Logout failed");
           }
 
           window.location.replace("/admin.html");
         } catch {
           notice.textContent = "Logout gagal. Silakan coba lagi.";
-
-          logoutButtons.forEach((button) => {
-            button.disabled = false;
-          });
+          logoutButtons.forEach((button) => (button.disabled = false));
         }
       }
 
-      logoutButtons.forEach((button) => {
-        button.addEventListener("click", logout);
-      });
+      logoutButtons.forEach((button) =>
+        button.addEventListener("click", logout),
+      );
 
-      function prepareAvatar() {
-        notice.textContent =
-          "Fitur tambah avatar akan diaktifkan setelah API penyimpanan selesai.";
+      function showNotice(message, type = "normal") {
+        notice.textContent = message;
+        notice.className =
+          "text-sm " +
+          (type === "error"
+            ? "text-red-400"
+            : type === "success"
+              ? "text-emerald-400"
+              : "text-zinc-400");
       }
 
-      document
-        .getElementById("addAvatarButton")
-        .addEventListener("click", prepareAvatar);
-
-      document
-        .getElementById("emptyAddButton")
-        .addEventListener("click", prepareAvatar);
-
-      document
-        .getElementById("searchInput")
-        .addEventListener("input", (event) => {
-          if (event.target.value.trim()) {
-            notice.textContent =
-              "Pencarian akan aktif setelah data avatar terhubung.";
-          } else {
-            notice.textContent = "";
-          }
+      async function api(path, options = {}) {
+        const response = await fetch("/.netlify/functions/" + path, {
+          credentials: "same-origin",
+          cache: "no-store",
+          ...options,
+          headers: {
+            ...(options.body ? { "Content-Type": "application/json" } : {}),
+            ...(options.headers || {}),
+          },
         });
 
-      verifySession();
+        const result = await response.json().catch(() => ({}));
+
+        if (response.status === 401) {
+          window.location.replace("/admin.html");
+          throw new Error("Session berakhir. Silakan login kembali.");
+        }
+
+        if (!response.ok || result.success !== true) {
+          throw new Error(result.error || "Permintaan gagal. Coba lagi.");
+        }
+
+        return result;
+      }
+
+      function makeElement(tag, className, text) {
+        const element = document.createElement(tag);
+        element.className = className;
+        if (text !== undefined) element.textContent = text;
+        return element;
+      }
+
+      function renderAvatars() {
+        const query = $("searchInput").value.trim().toLowerCase();
+
+        const filtered = avatars.filter((avatar) =>
+          [avatar.username, avatar.tier, avatar.notes].some((value) =>
+            String(value || "")
+              .toLowerCase()
+              .includes(query),
+          ),
+        );
+
+        $("totalAvatars").textContent = avatars.length;
+        $("totalTiers").textContent = new Set(
+          avatars.map((avatar) => avatar.tier),
+        ).size;
+
+        $("avatarGrid").replaceChildren();
+        $("avatarGrid").classList.toggle("hidden", filtered.length === 0);
+        $("emptyState").classList.toggle("hidden", filtered.length !== 0);
+        $("loadingState").classList.add("hidden");
+
+        $("emptyMessage").textContent = query
+          ? "Tidak ada avatar yang cocok dengan pencarian."
+          : "Mulai bangun koleksi avatar Roblox kamu.";
+
+        $("emptyAddButton").classList.toggle("hidden", Boolean(query));
+
+        filtered.forEach((avatar) => {
+          const card = makeElement(
+            "article",
+            "overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950",
+          );
+          const imageWrap = makeElement(
+            "div",
+            "flex h-48 items-center justify-center overflow-hidden bg-zinc-900",
+          );
+
+          if (avatar.image && /^https:\/\/\S+$/i.test(avatar.image)) {
+            const img = document.createElement("img");
+            img.src = avatar.image;
+            img.alt = "Avatar " + avatar.username;
+            img.loading = "lazy";
+            img.referrerPolicy = "no-referrer";
+            img.className = "h-full w-full object-cover";
+            img.addEventListener(
+              "error",
+              () => {
+                img.remove();
+                imageWrap.append(
+                  makeElement(
+                    "span",
+                    "text-sm text-zinc-600",
+                    "Image unavailable",
+                  ),
+                );
+              },
+              { once: true },
+            );
+            imageWrap.append(img);
+          } else {
+            imageWrap.append(
+              makeElement("span", "text-sm text-zinc-600", "No image"),
+            );
+          }
+
+          const content = makeElement("div", "space-y-4 p-4");
+          const titleRow = makeElement(
+            "div",
+            "flex items-start justify-between gap-3",
+          );
+          const titleGroup = makeElement("div", "min-w-0");
+          titleGroup.append(
+            makeElement("h4", "truncate font-semibold", avatar.username),
+          );
+          titleGroup.append(
+            makeElement(
+              "p",
+              "mt-1 text-xs text-zinc-500",
+              "Rating " + Number(avatar.rating).toFixed(1) + "/10",
+            ),
+          );
+
+          const tier = makeElement(
+            "span",
+            "shrink-0 rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 py-1 text-xs font-semibold",
+            avatar.tier,
+          );
+          titleRow.append(titleGroup, tier);
+          content.append(titleRow);
+
+          if (avatar.notes) {
+            content.append(
+              makeElement(
+                "p",
+                "whitespace-pre-wrap break-words text-sm leading-6 text-zinc-400",
+                avatar.notes,
+              ),
+            );
+          }
+
+          const actions = makeElement(
+            "div",
+            "flex gap-2 border-t border-zinc-800 pt-3",
+          );
+          const editButton = makeElement(
+            "button",
+            "flex-1 rounded-lg border border-zinc-800 px-3 py-2 text-sm hover:bg-zinc-900",
+            "Edit",
+          );
+          editButton.type = "button";
+          editButton.addEventListener("click", () => openModal(avatar));
+
+          const deleteButton = makeElement(
+            "button",
+            "rounded-lg border border-red-900/70 px-3 py-2 text-sm text-red-300 hover:bg-red-950/50",
+            "Delete",
+          );
+          deleteButton.type = "button";
+          deleteButton.addEventListener("click", () => deleteAvatar(avatar));
+
+          actions.append(editButton, deleteButton);
+          content.append(actions);
+          card.append(imageWrap, content);
+          $("avatarGrid").append(card);
+        });
+      }
+
+      async function loadAvatars() {
+        $("loadingState").classList.remove("hidden");
+        $("emptyState").classList.add("hidden");
+        $("avatarGrid").classList.add("hidden");
+
+        try {
+          const result = await api("avatar-list");
+          if (!Array.isArray(result.data)) {
+            throw new Error("Format data avatar tidak valid.");
+          }
+
+          avatars = result.data;
+          $("storageStatus").textContent = "Connected";
+          $("storageDot").className = "h-2 w-2 rounded-full bg-emerald-400";
+          renderAvatars();
+        } catch (error) {
+          $("loadingState").textContent =
+            "Gagal memuat avatar. " + error.message;
+          $("storageStatus").textContent = "Connection error";
+          $("storageDot").className = "h-2 w-2 rounded-full bg-red-400";
+          showNotice(error.message, "error");
+        }
+      }
+
+      function openModal(avatar = null) {
+        form.reset();
+        $("formError").classList.add("hidden");
+        $("avatarId").value = avatar?.id || "";
+        $("username").value = avatar?.username || "";
+        $("image").value = avatar?.image || "";
+        $("tier").value = avatar?.tier || "Unranked";
+        $("rating").value = avatar?.rating ?? 0;
+        $("notes").value = avatar?.notes || "";
+        $("modalTitle").textContent = avatar ? "Edit avatar" : "Add avatar";
+        $("saveButton").textContent = avatar ? "Save changes" : "Save avatar";
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        $("username").focus();
+      }
+
+      function closeModal() {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
+
+      $("addAvatarButton").addEventListener("click", () => openModal());
+      $("emptyAddButton").addEventListener("click", () => openModal());
+      $("closeModalButton").addEventListener("click", closeModal);
+      $("cancelButton").addEventListener("click", closeModal);
+      $("searchInput").addEventListener("input", renderAvatars);
+
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) closeModal();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeModal();
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (busy) return;
+
+        const id = $("avatarId").value;
+        const payload = {
+          username: $("username").value.trim(),
+          image: $("image").value.trim(),
+          tier: $("tier").value,
+          rating: Number($("rating").value),
+          notes: $("notes").value.trim(),
+        };
+
+        if (!payload.username || payload.username.length > 40) {
+          $("formError").textContent =
+            "Username wajib diisi, maksimal 40 karakter.";
+          $("formError").classList.remove("hidden");
+          return;
+        }
+
+        if (payload.image && !/^https:\/\/\S+$/i.test(payload.image)) {
+          $("formError").textContent = "URL gambar harus menggunakan HTTPS.";
+          $("formError").classList.remove("hidden");
+          return;
+        }
+
+        if (
+          !Number.isFinite(payload.rating) ||
+          payload.rating < 0 ||
+          payload.rating > 10
+        ) {
+          $("formError").textContent = "Rating harus antara 0 dan 10.";
+          $("formError").classList.remove("hidden");
+          return;
+        }
+
+        if (payload.notes.length > 1000) {
+          $("formError").textContent = "Notes maksimal 1000 karakter.";
+          $("formError").classList.remove("hidden");
+          return;
+        }
+
+        busy = true;
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
+
+        try {
+          const result = await api(id ? "avatar-update" : "avatar-create", {
+            method: id ? "PUT" : "POST",
+            body: JSON.stringify(id ? { ...payload, id } : payload),
+          });
+
+          closeModal();
+          showNotice(result.message || "Avatar berhasil disimpan.", "success");
+          await loadAvatars();
+        } catch (error) {
+          $("formError").textContent = error.message;
+          $("formError").classList.remove("hidden");
+        } finally {
+          busy = false;
+          saveButton.disabled = false;
+          saveButton.textContent = id ? "Save changes" : "Save avatar";
+        }
+      });
+
+      async function deleteAvatar(avatar) {
+        if (busy) return;
+
+        const confirmed = window.confirm(
+          `Hapus avatar "${avatar.username}"? Perubahan ini akan disimpan ke GitHub.`,
+        );
+
+        if (!confirmed) return;
+
+        busy = true;
+        showNotice("Menghapus avatar...");
+
+        try {
+          const result = await api("avatar-delete", {
+            method: "DELETE",
+            body: JSON.stringify({ id: avatar.id }),
+          });
+
+          showNotice(result.message || "Avatar berhasil dihapus.", "success");
+          await loadAvatars();
+        } catch (error) {
+          showNotice(error.message, "error");
+        } finally {
+          busy = false;
+        }
+      }
+
+      async function init() {
+        if (await verifySession()) {
+          await loadAvatars();
+        }
+      }
+
+      init();
     </script>
   </body>
 </html>
