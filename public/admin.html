@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#09090b" />
+    <title>Admin Login — DaveTier</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body
+    class="min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-indigo-500/30"
+  >
+    <main class="flex min-h-screen flex-col px-6">
+      <header
+        class="mx-auto flex w-full max-w-6xl items-center justify-between py-7"
+      >
+        <a href="/" class="flex items-center gap-3" aria-label="DaveTier Home">
+          <div
+            class="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sm font-black text-zinc-950"
+          >
+            D
+          </div>
+          <span class="text-sm font-semibold tracking-tight">DaveTier</span>
+        </a>
+
+        <span class="text-xs text-zinc-500">ADMINISTRATION</span>
+      </header>
+
+      <section class="flex flex-1 items-center justify-center py-12">
+        <div class="w-full max-w-sm">
+          <div class="mb-8">
+            <p
+              class="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-zinc-500"
+            >
+              Restricted access
+            </p>
+
+            <h1 class="text-3xl font-semibold tracking-tight">Welcome back.</h1>
+
+            <p class="mt-2 text-sm leading-6 text-zinc-400">
+              Sign in to manage your avatar review platform.
+            </p>
+          </div>
+
+          <form id="loginForm" class="space-y-5">
+            <div>
+              <label
+                for="password"
+                class="mb-2 block text-sm font-medium text-zinc-300"
+              >
+                Admin password
+              </label>
+
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+                autofocus
+                class="w-full rounded-xl border border-zinc-800 bg-zinc-900/70 px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-zinc-500 focus:ring-2 focus:ring-white/5"
+              />
+            </div>
+
+            <button
+              id="loginButton"
+              type="submit"
+              class="flex w-full items-center justify-center rounded-xl bg-white px-4 py-3.5 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-white/40 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Sign in
+              <svg
+                class="ml-2 h-4 w-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                aria-hidden="true"
+              >
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+
+            <p
+              id="message"
+              role="status"
+              aria-live="polite"
+              class="min-h-5 text-sm text-red-400"
+            ></p>
+          </form>
+
+          <div class="mt-8 border-t border-zinc-900 pt-5">
+            <p class="text-xs leading-5 text-zinc-500">
+              Authorized administrators only. All access is subject to
+              verification.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer
+        class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 py-6 text-xs text-zinc-600"
+      >
+        <span>© <span id="year"></span> DaveTier</span>
+        <a href="/" class="transition hover:text-zinc-300">Back to website</a>
+      </footer>
+    </main>
+
+    <script>
+      const form = document.getElementById("loginForm");
+      const passwordInput = document.getElementById("password");
+      const button = document.getElementById("loginButton");
+      const message = document.getElementById("message");
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      async function checkSession() {
+        try {
+          const response = await fetch("/.netlify/functions/admin-session", {
+            credentials: "same-origin",
+          });
+
+          if (response.ok) {
+            window.location.replace("/dashboard.html");
+          }
+        } catch {
+          // Login can still be attempted.
+        }
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        message.textContent = "";
+        button.disabled = true;
+        button.textContent = "Signing in...";
+
+        try {
+          const response = await fetch("/.netlify/functions/admin-login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({
+              password: passwordInput.value,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok || !result.success) {
+            message.textContent =
+              response.status === 401
+                ? "Incorrect password. Please try again."
+                : "Unable to sign in. Please try again.";
+            return;
+          }
+
+          passwordInput.value = "";
+          window.location.replace("/dashboard.html");
+        } catch {
+          message.textContent = "Connection error. Please try again.";
+        } finally {
+          button.disabled = false;
+          button.textContent = "Sign in";
+        }
+      });
+
+      checkSession();
+    </script>
+  </body>
+</html>
