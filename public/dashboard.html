@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#09090b" />
+    <title>Dashboard — DaveTier</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="min-h-screen bg-zinc-950 text-zinc-100 antialiased">
+    <div class="min-h-screen md:flex">
+      <aside
+        class="flex w-full flex-col border-b border-zinc-800 bg-zinc-950 p-5 md:min-h-screen md:w-64 md:border-b-0 md:border-r"
+      >
+        <a href="/" class="flex items-center gap-3">
+          <div
+            class="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sm font-black text-zinc-950"
+          >
+            D
+          </div>
+          <div>
+            <p class="text-sm font-semibold tracking-tight">DaveTier</p>
+            <p class="text-xs text-zinc-500">Admin panel</p>
+          </div>
+        </a>
+
+        <nav class="mt-8 flex gap-2 overflow-x-auto md:flex-col">
+          <a
+            href="#overview"
+            class="shrink-0 rounded-lg bg-zinc-800 px-3 py-2.5 text-sm font-medium text-white"
+          >
+            Overview
+          </a>
+          <a
+            href="#avatars"
+            class="shrink-0 rounded-lg px-3 py-2.5 text-sm text-zinc-400 transition hover:bg-zinc-900 hover:text-white"
+          >
+            Avatar library
+          </a>
+        </nav>
+
+        <div class="mt-auto hidden border-t border-zinc-800 pt-5 md:block">
+          <p class="text-xs text-zinc-500">Signed in as</p>
+          <p class="mt-1 text-sm font-medium">Administrator</p>
+
+          <button
+            id="logoutButton"
+            class="mt-4 w-full rounded-lg border border-zinc-800 px-3 py-2.5 text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
+          >
+            Sign out
+          </button>
+        </div>
+      </aside>
+
+      <main class="min-w-0 flex-1" id="overview">
+        <header
+          class="flex items-center justify-between border-b border-zinc-800 px-5 py-5 sm:px-8"
+        >
+          <div>
+            <p class="text-xs text-zinc-500">Workspace / Overview</p>
+            <h1 class="mt-1 text-xl font-semibold tracking-tight">Dashboard</h1>
+          </div>
+
+          <button
+            id="mobileLogoutButton"
+            class="rounded-lg border border-zinc-800 px-3 py-2 text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white md:hidden"
+          >
+            Sign out
+          </button>
+
+          <div class="hidden items-center gap-2 sm:flex">
+            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+            <span class="text-xs text-zinc-400">Admin session</span>
+          </div>
+        </header>
+
+        <div class="mx-auto max-w-7xl space-y-8 p-5 sm:p-8">
+          <section
+            class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"
+          >
+            <div>
+              <h2 class="text-2xl font-semibold tracking-tight">
+                Welcome back.
+              </h2>
+              <p class="mt-2 text-sm text-zinc-400">
+                Manage your Roblox avatar ratings in one place.
+              </p>
+            </div>
+
+            <button
+              id="addAvatarButton"
+              class="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-200"
+            >
+              <svg
+                class="h-4 w-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+              </svg>
+              Add avatar
+            </button>
+          </section>
+
+          <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <article
+              class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5"
+            >
+              <p class="text-sm text-zinc-400">Total avatars</p>
+              <p class="mt-4 text-3xl font-semibold tracking-tight">—</p>
+              <p class="mt-2 text-xs text-zinc-500">
+                Data source not connected
+              </p>
+            </article>
+
+            <article
+              class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5"
+            >
+              <p class="text-sm text-zinc-400">Tier categories</p>
+              <p class="mt-4 text-3xl font-semibold tracking-tight">—</p>
+              <p class="mt-2 text-xs text-zinc-500">
+                Will be calculated from avatar data
+              </p>
+            </article>
+
+            <article
+              class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5 sm:col-span-2 lg:col-span-1"
+            >
+              <p class="text-sm text-zinc-400">Storage status</p>
+              <div class="mt-4 flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+                <p class="text-lg font-semibold">Not connected</p>
+              </div>
+              <p class="mt-2 text-xs text-zinc-500">
+                GitHub storage integration pending
+              </p>
+            </article>
+          </section>
+
+          <section
+            id="avatars"
+            class="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/30"
+          >
+            <div
+              class="flex flex-col gap-4 border-b border-zinc-800 p-5 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div>
+                <h3 class="font-semibold">Avatar library</h3>
+                <p class="mt-1 text-sm text-zinc-500">
+                  Manage your avatar review collection.
+                </p>
+              </div>
+
+              <div class="relative">
+                <svg
+                  class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="m16 16 4 4" stroke-linecap="round" />
+                </svg>
+
+                <input
+                  id="searchInput"
+                  type="search"
+                  placeholder="Search avatars..."
+                  class="w-full rounded-lg border border-zinc-800 bg-zinc-950 py-2.5 pl-9 pr-3 text-sm outline-none placeholder:text-zinc-600 focus:border-zinc-600 sm:w-64"
+                />
+              </div>
+            </div>
+
+            <div
+              class="flex min-h-64 flex-col items-center justify-center px-6 py-14 text-center"
+            >
+              <div
+                class="flex h-12 w-12 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900"
+              >
+                <svg
+                  class="h-5 w-5 text-zinc-400"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="3" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <path d="m21 15-5-5L5 21" />
+                </svg>
+              </div>
+
+              <h4 class="mt-4 text-sm font-semibold">
+                Your library is not connected yet
+              </h4>
+              <p class="mt-2 max-w-sm text-sm leading-6 text-zinc-500">
+                Once the storage API is ready, your avatar images, names, and
+                tier ratings will appear here.
+              </p>
+
+              <button
+                id="emptyAddButton"
+                class="mt-5 rounded-lg border border-zinc-800 px-4 py-2.5 text-sm font-medium text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
+              >
+                Prepare first avatar
+              </button>
+            </div>
+          </section>
+
+          <p
+            id="notice"
+            role="status"
+            aria-live="polite"
+            class="text-sm text-zinc-400"
+          ></p>
+
+          <footer class="border-t border-zinc-900 pt-5 text-xs text-zinc-600">
+            DaveTier Admin · <span id="year"></span>
+          </footer>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const notice = document.getElementById("notice");
+      const logoutButtons = [
+        document.getElementById("logoutButton"),
+        document.getElementById("mobileLogoutButton"),
+      ].filter(Boolean);
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      async function verifySession() {
+        try {
+          const response = await fetch("/.netlify/functions/admin-session", {
+            method: "GET",
+            credentials: "same-origin",
+            cache: "no-store",
+          });
+
+          const result = await response.json();
+
+          if (!response.ok || result.authenticated !== true) {
+            window.location.replace("/admin.html");
+          }
+        } catch {
+          document.body.innerHTML = `
+          <main class="flex min-h-screen items-center justify-center bg-zinc-950 px-6 text-zinc-100">
+            <div class="max-w-sm text-center">
+              <h1 class="text-xl font-semibold">Unable to verify session</h1>
+              <p class="mt-3 text-sm text-zinc-400">Check your connection and sign in again.</p>
+              <a href="/admin.html" class="mt-5 inline-block rounded-lg bg-white px-4 py-3 text-sm font-semibold text-zinc-950">Back to login</a>
+            </div>
+          </main>
+        `;
+        }
+      }
+
+      async function logout() {
+        notice.textContent = "Logout endpoint belum dibuat.";
+      }
+
+      logoutButtons.forEach((button) => {
+        button.addEventListener("click", logout);
+      });
+
+      function prepareAvatar() {
+        notice.textContent =
+          "Fitur tambah avatar akan diaktifkan setelah API penyimpanan selesai.";
+      }
+
+      document
+        .getElementById("addAvatarButton")
+        .addEventListener("click", prepareAvatar);
+      document
+        .getElementById("emptyAddButton")
+        .addEventListener("click", prepareAvatar);
+
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", (event) => {
+          if (event.target.value.trim()) {
+            notice.textContent =
+              "Pencarian akan aktif setelah data avatar terhubung.";
+          } else {
+            notice.textContent = "";
+          }
+        });
+
+      verifySession();
+    </script>
+  </body>
+</html>
